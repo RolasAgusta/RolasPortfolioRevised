@@ -7779,7 +7779,7 @@ iframe.google-map {
     transform-origin: left;
     transition: transform 0.3s ease;
     z-index: -1;
-    border-radius: 4px;
+    border-radius: 15px;
 }
 
 .main-menu li a:hover::before,
