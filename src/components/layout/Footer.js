@@ -14,7 +14,7 @@ const Footer = () => {
                 {/* Ubah col-lg-4 menjadi col-lg-6 */}
                 <p className="mb-20 mt-20 text-sm color-gray-500 wow animate__animated animate__fadeInUp">
                   Punya pertanyaan, saran, atau ingin berkolaborasi? Jangan ragu
-                  untuk menghubungi kami melalui kontak yang tersedia. Kami
+                  untuk menghubungi melalui kontak yang tersedia. Saya
                   senang mendengar dari Anda!
                 </p>
               </div>
