@@ -1,116 +1,181 @@
-'use client'
-import Link from 'next/link'
-import Image from 'next/image'
-import { React, useState, useEffect } from "react"
-import SwitchButton from '@/components/elements/SwitchButton'
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { React, useState, useEffect } from "react";
+// import SwitchButton from '@/components/elements/SwitchButton'
 
 const Header = ({ handleOpen, handleRemove, openClass }) => {
-    // State to keep track of the scroll position
-    const [scroll, setScroll] = useState(0);
+  const [currentPath, setCurrentPath] = useState("");
+  const [scroll, setScroll] = useState(0);
+  const [isToggled, setToggled] = useState(false); // Ini sebenarnya tidak digunakan untuk efek ini, tapi biarkan saja jika ada tujuan lain
+  const [hoverDirection, setHoverDirection] = useState({}); // State baru untuk menyimpan arah hover
 
-    // State to represent whether something is toggled or not
-    const [isToggled, setToggled] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentPath(window.location.pathname);
+    }
+  }, []);
 
-    // Function to toggle the value of 'isToggled'
-    const toggleTrueFalse = () => setToggled(!isToggled);
+  // Effect hook to add a scroll event listener
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollCheck = window.scrollY > 100;
+      if (scrollCheck !== scroll) {
+        setScroll(scrollCheck);
+      }
+    };
+    document.addEventListener("scroll", handleScroll);
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  });
 
-    // Effect hook to add a scroll event listener
-    useEffect(() => {
-        // Callback function to handle the scroll event
-        const handleScroll = () => {
-            // Check if the current scroll position is greater than 100 pixels
-            const scrollCheck = window.scrollY > 100;
+  // Fungsi untuk menentukan arah kursor masuk
+  const handleMouseEnter = (e, linkId) => {
+    const target = e.currentTarget; // Elemen Link (<a>) yang di-hover
+    const { left, width } = target.getBoundingClientRect(); // Posisi dan lebar elemen
+    const mouseX = e.clientX; // Posisi kursor X
 
-            // Update the 'scroll' state only if the scroll position has changed
-            if (scrollCheck !== scroll) {
-                setScroll(scrollCheck);
-            }
-        };
+    // Hitung apakah kursor masuk dari sisi kiri (0-50% lebar) atau kanan (50-100% lebar)
+    const middle = left + width / 2;
 
-        // Add the 'handleScroll' function as a scroll event listener
-        document.addEventListener("scroll", handleScroll);
+    if (mouseX < middle) {
+      setHoverDirection((prev) => ({ ...prev, [linkId]: "left" }));
+    } else {
+      setHoverDirection((prev) => ({ ...prev, [linkId]: "right" }));
+    }
+  };
 
-        // Clean up the event listener when the component unmounts
-        return () => {
-            document.removeEventListener("scroll", handleScroll);
-        };
-    });
+  // Fungsi untuk mereset arah saat kursor meninggalkan
+  const handleMouseLeave = (e, linkId) => {
+    setHoverDirection((prev) => ({ ...prev, [linkId]: null }));
+  };
 
-    return (
-        <>
-            <header className={scroll ? "header sticky-bar bg-gray-900 stick" : "header sticky-bar bg-gray-900"}>
-                <div className="container">
-                    <div className="main-header">
-                        <div className="header-logo">
-                            <Link className="d-flex" href="/">
-                                <Image width={116} height={36} className="logo-night" alt="GenZ" src="/assets/imgs/template/logo.svg" />
-                                <Image width={116} height={36} className="d-none logo-day" alt="GenZ" src="/assets/imgs/template/logo-day.svg" />
-                            </Link>
-                        </div>
-                        <div className="header-nav">
-                            <nav className="nav-main-menu d-none d-xl-block">
-                                <ul className="main-menu">
-                                    <li className="has-children"><Link className="active" href="/">Home</Link></li>
-                                    <li className="has-children"><Link className="color-gray-500" href="/about">About Me</Link>
-                                        <ul className="sub-menu">
-                                            <li><Link className="color-gray-500" href="/portfolio">My Portfolio</Link></li>
-                                            <li><Link className="color-gray-500" href="/portfolio-details">Portfolio Details</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li className="has-children"><Link className="color-gray-500" href="#">Category</Link>
-                                        <ul className="sub-menu two-col">
-                                            <li><Link className="color-gray-500" href="/blog-archive">Blog Category 1</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li className="has-children"><Link className="color-gray-500" href="#">Single Post</Link>
-                                        <ul className="sub-menu two-col">
-                                            <li><Link className="color-gray-500" href="/single-sidebar">Blog Single 1</Link></li>                                        </ul>
-                                    </li>
-                                    <li className="has-children"><Link className="color-gray-500" href="#">Pages</Link>
-                                        <ul className="sub-menu two-col">
-                                            <li><Link className="color-gray-500" href="/about">About</Link></li>
-                                            <li><Link className="color-gray-500" href="/page-author">Author posts</Link></li>
-                                            <li><Link className="color-gray-500" href="/contact">Contact</Link></li>
-                                            <li><Link className="color-gray-500" href="/page-search">Search results</Link></li>
-                                            <li><Link className="color-gray-500" href="/page-login">Login</Link></li>
-                                            <li><Link className="color-gray-500" href="/page-signup">Signup</Link></li>
-                                            <li><Link className="color-gray-500" href="/page-404">Page 404</Link></li>
-                                        </ul>
-                                    </li>
-                                    <li><Link className="color-gray-500" href="/contact">Contact</Link></li>
-                                </ul>
-                            </nav>
-                            <div className={`burger-icon burger-icon-white ${openClass && "burger-close"}`}
-                                onClick={() => { handleOpen(); handleRemove() }}>
-                                <span className="burger-icon-top" />
-                                <span className="burger-icon-mid" />
-                                <span className="burger-icon-bottom" />
-                            </div>
-                        </div>
-                        <div className="header-right text-end">
-                            <Link className="btn btn-search" href="#" onClick={toggleTrueFalse} />
-                            <SwitchButton />
-                            <div className={isToggled ? "form-search p-20 d-block" : " form-search p-20 d-none"}>
-                                <form action="#">
-                                    <input className="form-control" type="text" placeholder="Search" />
-                                    <input className="btn-search-2" />
-                                </form>
-                                <div className="popular-keywords text-start mt-20">
-                                    <p className="mb-10 color-white">Popular tags:</p>
-                                    <Link className="color-gray-600 mr-10 font-xs" href="#"># Travel,</Link>
-                                    <Link className="color-gray-600 mr-10 font-xs" href="#"># Tech,</Link>
-                                    <Link className="color-gray-600 mr-10 font-xs" href="#"># Movie</Link>
-                                    <Link className="color-gray-600 mr-10 font-xs" href="#"># Lifestyle</Link>
-                                    <Link className="color-gray-600 mr-10 font-xs" href="#"># Sport</Link>
-                                </div>
-                            </div><Link className="btn btn-linear d-none d-sm-inline-block hover-up hover-shadow" href="/page-login">Subscribe</Link>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-        </>
-    );
+  return (
+    <>
+      <header
+        className={
+          scroll
+            ? "header sticky-bar bg-gray-900 stick"
+            : "header sticky-bar bg-gray-900"
+        }
+      >
+        <div className="container">
+          <div className="main-header d-flex justify-content-center">
+            <div className="header-nav">
+              <nav className="nav-main-menu d-none d-xl-block">
+                <ul className="main-menu">
+                  <li>
+                    <Link
+                      className={`color-gray-500 ${
+                        hoverDirection["homeLink"] === "left"
+                          ? "hover-from-left"
+                          : ""
+                      } ${
+                        hoverDirection["homeLink"] === "right"
+                          ? "hover-from-right"
+                          : ""
+                      }`}
+                      href="#home"
+                      onMouseEnter={(e) => handleMouseEnter(e, "homeLink")}
+                      onMouseLeave={(e) => handleMouseLeave(e, "homeLink")}
+                    >
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className={`color-gray-500 ${
+                        hoverDirection["aboutLink"] === "left"
+                          ? "hover-from-left"
+                          : ""
+                      } ${
+                        hoverDirection["aboutLink"] === "right"
+                          ? "hover-from-right"
+                          : ""
+                      }`}
+                      href="#about"
+                      onMouseEnter={(e) => handleMouseEnter(e, "aboutLink")}
+                      onMouseLeave={(e) => handleMouseLeave(e, "aboutLink")}
+                    >
+                      About Me
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className={`color-gray-500 ${
+                        hoverDirection["projectsLink"] === "left"
+                          ? "hover-from-left"
+                          : ""
+                      } ${
+                        hoverDirection["projectsLink"] === "right"
+                          ? "hover-from-right"
+                          : ""
+                      }`}
+                      href="#projects"
+                      onMouseEnter={(e) => handleMouseEnter(e, "projectsLink")}
+                      onMouseLeave={(e) => handleMouseLeave(e, "projectsLink")}
+                    >
+                      Projects
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className={`color-gray-500 ${
+                        hoverDirection["skillsLink"] === "left"
+                          ? "hover-from-left"
+                          : ""
+                      } ${
+                        hoverDirection["skillsLink"] === "right"
+                          ? "hover-from-right"
+                          : ""
+                      }`}
+                      href="#skills"
+                      onMouseEnter={(e) => handleMouseEnter(e, "skillsLink")}
+                      onMouseLeave={(e) => handleMouseLeave(e, "skillsLink")}
+                    >
+                      Skills
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className={`color-gray-500 ${
+                        hoverDirection["contactLink"] === "left"
+                          ? "hover-from-left"
+                          : ""
+                      } ${
+                        hoverDirection["contactLink"] === "right"
+                          ? "hover-from-right"
+                          : ""
+                      }`}
+                      href="#contact"
+                      onMouseEnter={(e) => handleMouseEnter(e, "contactLink")}
+                      onMouseLeave={(e) => handleMouseLeave(e, "contactLink")}
+                    >
+                      Contact
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
+              <div
+                className={`burger-icon burger-icon-white ${
+                  openClass && "burger-close"
+                }`}
+                onClick={() => {
+                  handleOpen();
+                  handleRemove();
+                }}
+              >
+                <span className="burger-icon-top" />
+                <span className="burger-icon-mid" />
+                <span className="burger-icon-bottom" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+    </>
+  );
 };
 
 export default Header;

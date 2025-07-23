@@ -7718,4 +7718,99 @@ iframe.google-map {
   color: #b9e0f2 !important;
 }
 
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor {
+  display: inline-block;
+  width: 1ch;
+  font-weight: 400;
+  color: black;
+  vertical-align: 0.15em; /* nilai positif = naikkan sedikit */
+}
+
+@media (prefers-color-scheme: dark) {
+  .typing-cursor {
+    color: whitesmoke;
+  }
+}
+
+.blink {
+  animation: blink 1s steps(1) infinite;
+}
+
+
+
+
 /*# sourceMappingURL=style.css.map */
+
+/* Tambahkan di bagian paling bawah public/assets/css/style.css */
+
+/* Dalam public/assets/css/style.css */
+
+/* Ubah selektor ini */
+.main-menu li a,
+.mobile-menu li a {
+    position: relative;
+    display: inline-block;
+    padding: 8px 12px;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.3s ease;
+    border-radius: 4px; /* Sudut membulat */
+}
+
+.main-menu li a::before,
+.mobile-menu li a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #3B82F6; /* Warna biru */
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.main-menu li a:hover::before,
+.mobile-menu li a:hover::before {
+    transform: scaleX(1);
+}
+
+/* Efek untuk ketika kursor masuk dari kiri */
+.main-menu li a.hover-from-left::before,
+.mobile-menu li a.hover-from-left::before {
+    transform-origin: left;
+}
+
+.main-menu li a.hover-from-left:hover::before,
+.mobile-menu li a.hover-from-left:hover::before {
+    transform: scaleX(1);
+}
+
+/* Efek untuk ketika kursor masuk dari kanan */
+.main-menu li a.hover-from-right::before,
+.mobile-menu li a.hover-from-right::before {
+    transform-origin: right;
+}
+
+.main-menu li a.hover-from-right:hover::before,
+.mobile-menu li a.hover-from-right:hover::before {
+    transform: scaleX(1);
+}
+
+/* Untuk link "active" */
+.main-menu li a.active,
+.mobile-menu li a.active {
+    color: #3B82F6;
+}

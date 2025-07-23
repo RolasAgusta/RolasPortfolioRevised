@@ -1,85 +1,88 @@
+'use client'
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Pagination } from "swiper/modules"
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
-import Link from "next/link"
-import Image from "next/image"
-import data from "@/utils/blogData2"
+const swiperOptions = {
+  modules: [Pagination, Navigation],
+  slidesPerView: 4,
+  spaceBetween: 30,
+  loop: true,
+  autoplay: {
+    delay: 2500,
+    disableOnInteraction: false
+  },
+  navigation: {
+    prevEl: ".swiper-button-prev-style-1",
+    nextEl: ".swiper-button-next-style-1",
+  },
+  breakpoints: {
+    320: { slidesPerView: 1, spaceBetween: 30 },
+    575: { slidesPerView: 1, spaceBetween: 30 },
+    767: { slidesPerView: 1, spaceBetween: 30 },
+    991: { slidesPerView: 2, spaceBetween: 30 },
+    1199: { slidesPerView: 3, spaceBetween: 30 },
+    1350: { slidesPerView: 4, spaceBetween: 30 },
+  },
+}
 
-const EditorPicked = () => {
-    return (
-        <>
-            <h2 className="color-linear d-inline-block mb-10 wow animate__animated animate__fadeInUp">Editors picked</h2>
-            <p className="text-lg color-gray-500 wow animate__animated animate__fadeInUp">Featured and highly
-                rated articles</p>
-            <div className="row mt-70">
-                {data.slice(0, 5).map((item, i) => (
-                    i < 2 ? (
-                        <div className="col-lg-6 wow animate__animated animate__fadeIn" key={i}>
-                            <div className="card-blog-1 hover-up">
-                                <div className="card-image mb-20 mh-315 bdr-16"><Link className="post-type" href={`/blog/${item.id}`} />
-                                    <Link href={`/blog/${item.id}`}>
-                                        <Image width={484} height={300} src={`/assets/imgs/page/healthy/${item.img}`} alt="Genz" />
-                                    </Link>
-                                </div>
-                                <div className="card-info">
-                                    <div className="row">
-                                        <div className="col-7"><Link className="color-gray-700 text-sm" href={`/blog/${item.id}`}> #Travel</Link>
-                                        </div>
-                                        <div className="col-5 text-end"><span className="color-gray-700 text-sm timeread">{item.duration}  mins read</span></div>
-                                    </div><Link href={`/blog/${item.id}`}>
-                                        <h4 className="color-white mt-20">{item.title}</h4>
-                                    </Link>
-                                    <div className="row align-items-center mt-25">
-                                        <div className="col-7">
-                                            <div className="box-author"><Image width={48} height={48} src="/assets/imgs/page/homepage1/author.png" alt="Genz" />
-                                                <div className="author-info">
-                                                    <h6 className="color-gray-700">{item.authorname}</h6><span className="color-gray-700 text-sm">{item.date}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-5 text-end"><Link className="readmore color-gray-500 text-sm" href={`/blog/${item.id}`}><span>Read more</span></Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="col-lg-4 wow animate__animated animate__fadeIn" data-wow-delay=".1s" key={i}>
-                            <div className="card-blog-1 hover-up">
-                                <div className="card-image mb-20 mh-200 bdr-16 ">
-                                    <Link className="post-type" href={`/blog/${item.id}`} />
-                                    <Link href={`/blog/${item.id}`}>
-                                        <Image width={300} height={270} src={`/assets/imgs/page/healthy/${item.img}`} alt="Genz" />
-                                    </Link>
-                                </div>
-                                <div className="card-info">
-                                    <div className="row">
-                                        <div className="col-7"><Link className="color-gray-700 text-sm" href={`/blog/${item.id}`}> #Design</Link>
-                                        </div>
-                                        <div className="col-5 text-end"><span className="color-gray-700 text-sm timeread">{item.duration}  mins read</span></div>
-                                    </div><Link href="/single-sidebar">
-                                        <h5 className="color-white mt-20">{item.title}</h5>
-                                    </Link>
-                                    <div className="row align-items-center mt-25">
-                                        <div className="col-7">
-                                            <div className="box-author"><Image width={48} height={48} src="/assets/imgs/page/homepage1/author3.png" alt="Genz" />
-                                                <div className="author-info">
-                                                    <h6 className="color-gray-700">{item.authorname}</h6><span className="color-gray-700 text-sm">{item.date}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-5 text-end"><Link className="readmore color-gray-500 text-sm" href={`/blog/${item.id}`}><span>Read more</span></Link></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                ))
-                }
+const projects = [
+  { title: "IoT For Smart Farming", imgBig: "/assets/imgs/page/categories/IoT.jpg" },
+  { title: "Installation Panel For Smart System", imgBig: "/assets/imgs/page/categories/PLC.jpg" },
+  { title: "Microcontroller For Voltage Monitoring", imgBig: "/assets/imgs/page/categories/Prototipes.jpg" },
+  { title: "Design Smart Power Supply AC to DC", imgBig: "/assets/imgs/page/categories/Design.png" },
+  { title: "PCB Design For Smart Ultrasonic Sensor", imgBig: "/assets/imgs/page/categories/PCB.jpg" },
+  { title: "Community Teaching", imgBig: "/assets/imgs/page/categories/CIMG0593.JPG" },
+]
+
+const MyProjects = () => {
+  return (
+    <div id="projects" className="mt-100 mb-70" style={{ scrollMarginTop: "160px" }}>
+      <div className="box-topics border-gray-800 bg-gray-850">
+        <div className="row">
+          <div className="col-lg-2">
+            <h5 className="mb-15 color-white wow animate__animated animate__fadeInUp" data-wow-delay="0s">My Projects</h5>
+            <p className="color-gray-500 mb-20 wow animate__animated animate__fadeInUp" data-wow-delay=".3s">
+              Projek yang sudah ku jalani selama dunia perkuliahan.
+            </p>
+            <div className="box-buttons-slider position-relative wow animate__animated animate__zoomIn">
+              <div className="swiper-button-prev swiper-button-prev-style-1" />
+              <div className="swiper-button-next swiper-button-next-style-1" />
             </div>
-            <div className="text-center mb-50"><Link href="#" className="btn btn-linear btn-load-more wow animate__animated animate__zoomIn">
-                Show More Posts
-                <i className="fi-rr-arrow-small-right" /></Link></div>
-            <div className="text-center mb-80 mt-50 wow animate__animated animate__pulse"><Image width={825} height={160} src="/assets/imgs/page/homepage4/banner-3.png" alt="Genz" /></div>
-        </>
-    );
-};
+          </div>
+          <div className="col-lg-10">
+            <div className="box-swiper">
+              <div className="swiper-container swiper-group-5">
+                <Swiper {...swiperOptions} className="swiper-wrapper">
+                  {projects.map((item, i) => (
+                    <SwiperSlide className="swiper-slide" key={i}>
+                      <div className="card-style-1">
+                        <Link href="https://www.linkedin.com/in/rolasagusta/">
+                          <div className="card-image">
+                            <Image width={190} height={235} src={item.imgBig} alt={item.title} />
+                            <div className="card-info">
+                              <div className="info-bottom">
+                                <h6 className="color-white mb-5">{item.title}</h6>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
-export default EditorPicked;
+export default MyProjects
